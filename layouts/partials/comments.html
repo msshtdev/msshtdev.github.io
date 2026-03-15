@@ -1,0 +1,6 @@
+{{- $server := "" }}
+{{- if ge (int (index (split hugo.Version ".") 1)) "120" }}
+	{{- $server = hugo.IsServer }}
+{{- else }}
+	{{- $server = .Site.IsServer }}
+{{- end }}

@@ -1,0 +1,107 @@
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.6.2"></script>
+<style>
+mark {
+  background-color: yellow;
+  padding: 0 2px;
+}
+.search-result {
+  margin-bottom: 12px;
+}
+</style>
+
+<div class="widget-search widget">
+  <input
+    id="searchBox"
+    class="widget-search__field"
+    type="search"
+    placeholder="Search..."
+  />
+  <div id="searchResults"></div>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", async function () {
+  const res = await fetch("/index.json");
+  const data = await res.json();
+
+  const fuse = new Fuse(data, {
+    keys: ["title", "description", "content"],
+    includeScore: true,
+    includeMatches: true,
+    useExtendedSearch: true,
+    ignoreLocation : true,
+    findAllMatches: true,
+    shouldSort: true,
+    threshold: 0.4,
+  });
+
+  const input = document.getElementById("searchBox");
+  const resultsContainer = document.getElementById("searchResults");
+
+  function highlightText(text, indices) {
+    if (!indices || indices.length === 0) return text;
+    let result = "";
+    let lastIndex = 0;
+    for (const [start, end] of indices) {
+      result += text.slice(lastIndex, start);
+      result += "<mark>" + text.slice(start, end + 1) + "</mark>";
+      lastIndex = end + 1;
+    }
+    result += text.slice(lastIndex);
+    return result;
+  }
+
+  function extractMostRelevantSnippet(text, indices, context = 30) {
+    if (!indices || indices.length === 0) return "";
+
+    const [bestStart, bestEnd] = indices.reduce(
+      (longest, current) => {
+        const len = current[1] - current[0];
+        const longestLen = longest[1] - longest[0];
+        return len > longestLen ? current : longest;
+      },
+      indices[0]
+    );
+
+    const snippetStart = Math.max(0, bestStart - context);
+    const snippetEnd = Math.min(text.length, bestEnd + 1 + context);
+
+    const before = text.slice(snippetStart, bestStart);
+    const match = text.slice(bestStart, bestEnd + 1);
+    const after = text.slice(bestEnd + 1, snippetEnd);
+
+    const prefix = snippetStart > 0 ? "…" : "";
+    const suffix = snippetEnd < text.length ? "…" : "";
+
+    return `${prefix}${before}<mark>${match}</mark>${after}${suffix}`;
+  }
+
+  input.addEventListener("input", () => {
+    const results = fuse.search(input.value.trim());
+    resultsContainer.innerHTML = results.slice(0, 10).map(({ item, matches }) => {
+      let title = item.title;
+      let desc = item.description;
+
+      for (const m of matches) {
+        if (m.key === "title") {
+          title = highlightText(m.value, m.indices);
+        } else if (m.key === "description") {
+          desc = highlightText(m.value, m.indices);
+        } else if (m.key === "content") {
+          snippet = extractMostRelevantSnippet(m.value, m.indices);
+        }
+      }
+
+      return `
+        <div class="search-result">
+          <a href="${item.url}">
+            <strong>${title}</strong><br>
+            <small>${desc}</small>
+            <small>${snippet}</small>
+          </a>
+        </div>
+      `;
+    }).join("");
+  });
+});
+</script>
