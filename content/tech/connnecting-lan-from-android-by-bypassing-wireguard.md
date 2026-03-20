@@ -14,7 +14,7 @@ tags:
 
 # Theme-Defined params
 thumbnail: "img/wireguard.svg" # Thumbnail image
-lead: "Example lead - highlighted near the title" # Lead text
+lead: "Connecting Wi-Fi LAN from Android device without disabling WireGuard" # Lead text
 authorbox: true # Enable authorbox for specific page
 pager: true # Enable pager navigation (prev/next) for specific page
 toc: true # Enable Table of Contents for specific page
