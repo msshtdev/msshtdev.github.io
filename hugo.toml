@@ -70,7 +70,7 @@ tags_counter = true # Enable counter for each tag in "Tags" widget
 [Params.widgets.social]
 cached = false # activate cache if true
 # Enable parts of social widget
-simplex = 'https://smp19.simplex.im/g#OW3nB2HPgKY5TfW23dMVYCvyrU7OWbB_kg3vFMRLSEA'
+simplex = 'https://smp12.simplex.im/a#IQ0Ih0p9HMqk7fQE4_qwpoytOfFqMXG18oS5uQ4ugsA'
 github = "msshtdev"
 email = "dev.msshta@proton.me"
 

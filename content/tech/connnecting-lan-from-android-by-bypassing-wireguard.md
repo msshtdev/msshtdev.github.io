@@ -29,7 +29,7 @@ widgets: # Enable sidebar widgets in given order per page
 
 ## Problem
 
-Last week, I bought new Pixel 9a. While setting up, I realized I couldn't connect to the Wi-Fi LAN with Wireguard Interface on.
+Last week, I bought a new Pixel 9a. While setting up, I realized I couldn't connect to the Wi-Fi LAN with Wireguard Interface on.
 
 After cursorily searching, I found it's almost impossible to modify the Android routing policy from a normal user unlike GNU/Linux.
 
